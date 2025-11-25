@@ -6,7 +6,7 @@ from app import app
 
 @app.route('/')
 def home():
-    return "Flask says 'Hello world!'"
+    return "Frame says 'Hello world!'"
 
 
 
@@ -21,6 +21,6 @@ def data():
     # define some data
     d = {
         "Alice": "(708) 727-2377",
-        "<Your Name>": "<Your Phone Number>"
+        "Frame": "09-7198-9198"
     }
     return jsonify(d)  # convert your data to JSON and return
