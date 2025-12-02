@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Chaing Mai AQI</title>
+  <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+</head>
+
+<body>
+  <h1>Chaing Mai AQI</h1>
+
+  <div id="current-section"></div>
+  <div id="next-hr-section"></div>
+
+  <script>
+    (function () {
+      $.getJSON("/api/weather", function (data) {
+        // แสดง Current
+        if (data.current) {
+          $("#current-section").append("<h2>current</h2>");
+          let currentItems = [];
+          $.each(data.current, function (key, val) {
+            currentItems.push("<li>" + key + ": " + val + "</li>");
+          });
+          $("<ul/>", {
+            "class": "current-list",
+            html: currentItems.join("")
+          }).appendTo("#current-section");
+        }
+
+        // แสดง Next Hour
+        if (data.next_hr && Object.keys(data.next_hr).length > 0) {
+          $("#next-hr-section").append("<h2>next_hr</h2>");
+          let nextHrItems = [];
+          $.each(data.next_hr, function (key, val) {
+            nextHrItems.push("<li>" + key + ": " + val + "</li>");
+          });
+          $("<ul/>", {
+            "class": "next-hr-list",
+            html: nextHrItems.join("")
+          }).appendTo("#next-hr-section");
+        }
+      });
+    })();
+  </script>
+
+</body>
+
+</html>
