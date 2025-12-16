@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--Maythanan Ladee 670510722-->
+
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Precipitation Calendar - Hat Yai</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/hw03.css') }}">
+</head>
+
+
+<body>
+  <h2>Precipitation Calendar - Hat Yai</h2>
+  <table>
+    <tr>
+        <th>NOV2025</th>
+        <th>DEC2025</th>
+    </tr>
+    <tbody>
+    {% for day in data_d[:32] %}
+        <tr>
+          <td> {{ day }} </td>
+        </tr>
+        {% endfor %}   
+
+    {% for day in data_d[32:] %}
+        <tr>
+        <td> {{ day }} </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+
+</body>
+
+
+</html>

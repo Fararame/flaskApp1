@@ -1,0 +1,44 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+
+table {
+    border-collapse: collapse;
+    width: 800px;
+    margin: 20px auto;
+}
+
+
+th {
+    background-color: #4a81c4;
+    color: white;
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-transform: uppercase;  
+}
+
+
+td {
+    border: 1px solid #ddd;
+    color: #214197;
+    padding: 8px;
+    vertical-align: middle;
+    height: 1em;
+}
+
+
+.weekend {
+    background-color: #cfe2f3;
+}
+
+
+.cell-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+h2 {
+    text-align: center;
+}

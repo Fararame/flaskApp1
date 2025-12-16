@@ -4,7 +4,6 @@ from app import app
 from app import hw_views
 
 
-
 @app.route('/')
 def home():
     return "Frame says 'Hello world!'"
@@ -30,7 +29,6 @@ def data():
         "Alice": "(708) 727-2377",
         "Frame": "09-7198-9198"
     }
-    
     app.logger.debug(str(len(d)) + " entries in phonebook")
     return jsonify(d)  # convert your data to JSON and return
 

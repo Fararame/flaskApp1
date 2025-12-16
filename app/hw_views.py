@@ -6,7 +6,7 @@ import requests
 import json
 from datetime import datetime
 from urllib.request import urlopen
-from flask import jsonify
+from flask import jsonify, render_template
 from app import app
 
 @app.route('/weather')
@@ -44,3 +44,33 @@ def api_weather():
         "current": current_ordered,
         "next_hr": next_hr
     })
+    
+@app.route("/hw03/prcp")
+def hw03_prcp():
+    # construct API URL with lat/lon and date range
+    # fetch data using urlopen
+    # process daily precipitation data
+    # compute day of week for each date
+    # generate trend arrows
+    # assign weekend class
+    # organize by month (columns)
+    url = '''https://historical-forecast-api.open-meteo.com/v1/forecast?latitude=7.0084&longitude=100.4767&start_date=2025-11-01&end_date=2025-12-07&daily=precipitation_sum&hourly=temperature_2m&timezone=Asia%2FBangkok'''
+    response = urlopen(url)
+    r = response.read()
+    data_json = json.loads(r)
+
+    data = []
+    dayInMonth = []
+
+    for day, prcp in zip(data_json['daily']['time'], data_json['daily']['precipitation_sum']):
+        data.append((day, prcp))
+
+    def calculateDayOfWeek(dateStr):
+        date_obj = datetime.strptime(dateStr, "%Y-%m-%d")
+        return date_obj.strftime("%A")
+
+    for dateStr, _ in data:
+        dayOfWeek = calculateDayOfWeek(dateStr)
+        dayInMonth.append(dayOfWeek)
+
+    return render_template('lab03/hw03_prcp.html', data=data, data_d=dayInMonth)
