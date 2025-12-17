@@ -13,27 +13,60 @@
 
 <body>
   <h2>Precipitation Calendar - Hat Yai</h2>
+  <!-- Add table structure here -->
   <table>
-    <tr>
-        <th>NOV2025</th>
-        <th>DEC2025</th>
-    </tr>
-    <tbody>
-    {% for day in data_d[:32] %}
-        <tr>
-          <td> {{ day }} </td>
-        </tr>
-        {% endfor %}   
+    <thead>
+      <tr>
+        <th>NOV 2025</th>
+        <th>DEC 2025</th>
+      </tr>
+    </thead>
 
-    {% for day in data_d[32:] %}
-        <tr>
-        <td> {{ day }} </td>
-        </tr>
-        {% endfor %}
+    <tbody>
+      <tr>
+
+        <td class="month">
+          {% set nov = tup[:30] %}
+          {% for day, prcp in nov %}
+            {% if loop.first %}
+              <div class="day {% if 'Saturday' in day or 'Sunday' in day %}weekend{% endif %}">{{ day }} {{ prcp }}</div>
+            {% else %}
+              {% set prevPRCP = nov[loop.index0 - 1][1] %}
+              <div class="day {% if 'Saturday' in day or 'Sunday' in day %}weekend{% endif %}">
+                {{ day }} {{ prcp }}
+                {% if prcp > prevPRCP %} ↑
+                {% elif prcp < prevPRCP %} ↓
+                {% else %} ↔
+                {% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </td>
+
+        <td class="month">
+          {% set dec = tup[30:] %}
+          {% for day, prcp in dec %}
+            {% if loop.first %}
+              <div class="day {% if 'Saturday' in day or 'Sunday' in day %}weekend{% endif %}">{{ day }} {{ prcp }}</div>
+            {% else %}
+              {% set prevPRCP = dec[loop.index0 - 1][1] %}
+              <div class="day {% if 'Saturday' in day or 'Sunday' in day %}weekend{% endif %}">
+                {{ day }} {{ prcp }}
+                {% if prcp > prevPRCP %} ↑
+                {% elif prcp < prevPRCP %} ↓
+                {% else %} ↔
+                {% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </td>
+      </tr>
+
     </tbody>
   </table>
-
 </body>
 
 
 </html>
+
+<!--the problem is that it only work with two months-->

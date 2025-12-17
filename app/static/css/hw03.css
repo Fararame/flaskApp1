@@ -27,11 +27,27 @@ td {
     height: 1em;
 }
 
+.month {
+  padding: 0;
+   vertical-align: top;
+}
+
+.day {
+  padding: 6px 10px;
+  border-bottom: 1px solid #e0e0e0;
+  color: #1f4fd8;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+}
 
 .weekend {
     background-color: #cfe2f3;
 }
 
+.dayweekend {
+  background-color: #dbe8f6;
+}
 
 .cell-content {
     display: flex;
