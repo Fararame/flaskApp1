@@ -53,24 +53,29 @@ def hw03_prcp():
     r = response.read()
     data_json = json.loads(r)
 
-    data = []
+    prcpDATA = []
     dayInMonth = []
-    tup = []
-    prcOnly = []
-
-    for day, prcp in zip(data_json['daily']['time'], data_json['daily']['precipitation_sum']):  
-        data.append((day, prcp))
-        prcOnly.append(prcp)
-
+    prcpOnly = []
+    prcpTuple = []
+    dayInMonthShort = []
+    
+    for day, prcp in zip(data_json['daily']['time'], data_json['daily']['precipitation_sum']):
+        #print(f"{day}: {prcp} mm")
+        prcpDATA.append((day, prcp))
+        prcpOnly.append(prcp)
+        
     def calculateDayOfWeek(dateStr):
-        date_obj = datetime.strptime(dateStr, "%Y-%m-%d")
-        return date_obj.strftime("%A")
-
-    for dateStr, _ in data:
+        dateObj = datetime.strptime(dateStr, "%Y-%m-%d")
+        return dateObj.strftime("%A")
+    
+    for dateStr, _ in prcpDATA:
         dayOfWeek = calculateDayOfWeek(dateStr)
-        dayInMonth.append(dayOfWeek)
-
+        dayInMonth.append(dayOfWeek) 
+        
+    for day in dayInMonth:
+        dayInMonthShort.append(day[:2])
+    
     for i in range(len(dayInMonth)):
-        tup.append((dayInMonth[i], prcOnly[i]))
-
-    return render_template('lab03/hw03_prcp.html', data=data, data_d=dayInMonth, tup=tup)
+        prcpTuple.append((dayInMonthShort[i], prcpOnly[i]))
+        
+    return render_template('lab03/hw03_prcp.html', data=prcpDATA, days=dayInMonthShort, tup=prcpTuple)

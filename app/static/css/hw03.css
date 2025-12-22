@@ -15,7 +15,7 @@ th {
     color: white;
     padding: 10px;
     border: 1px solid #ddd;
-    text-transform: uppercase;  
+    text-transform: uppercase;
 }
 
 
@@ -25,6 +25,17 @@ td {
     padding: 8px;
     vertical-align: middle;
     height: 1em;
+}
+
+
+.weekend {
+    background-color: #cfe2f3;
+}
+
+
+.cell-content {
+    display: flex;
+    justify-content: space-between;
 }
 
 .month {
@@ -40,20 +51,6 @@ td {
   display: flex;
   justify-content: space-between;
 }
-
-.weekend {
-    background-color: #cfe2f3;
-}
-
-.dayweekend {
-  background-color: #dbe8f6;
-}
-
-.cell-content {
-    display: flex;
-    justify-content: space-between;
-}
-
 
 h2 {
     text-align: center;
