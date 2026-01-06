@@ -79,3 +79,7 @@ def hw03_prcp():
         prcpTuple.append((dayInMonthShort[i], prcpOnly[i]))
         
     return render_template('lab03/hw03_prcp.html', data=prcpDATA, days=dayInMonthShort, tup=prcpTuple)
+
+@app.route('/hw06/register', methods=('GET', 'POST'))
+def hw06_register():
+    return render_template('lab06/hw06_register.html')
