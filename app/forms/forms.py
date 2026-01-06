@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import (StringField, TextAreaField, IntegerField, BooleanField,
-                     RadioField)
-from wtforms.validators import InputRequired, Length
+                     RadioField, EmailField, PasswordField)
+from wtforms.validators import InputRequired, Length, Email, EqualTo, Regexp
 
 
 class CourseForm(FlaskForm):
@@ -15,3 +15,13 @@ class CourseForm(FlaskForm):
                        choices=['Beginner', 'Intermediate', 'Advanced'],
                        validators=[InputRequired()])
     available = BooleanField('Available', default='checked')
+    
+class RegistrationForm(FlaskForm):
+    username = StringField('Username', validators=[InputRequired(),
+                                                   Length(min=2, max=20)])
+    email = EmailField('Email', validators=[InputRequired(),
+                                             Email(message='Invalid Email')])
+    password = PasswordField('Password', validators=[InputRequired(),
+                                                   Regexp(r'^(?=.*[0-9]).*$', message='Password must contain at least one number')])
+    confirm_password = PasswordField('Password', validators=[InputRequired(),
+                                                   EqualTo('password', message='Passwords must match')])
