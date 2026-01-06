@@ -1,4 +1,4 @@
-{% comment %} Maythanan (670510722) {% endcomment %}
+<!-- Maythanan (670510722) -->
 {% extends 'lab06/base.html' %}
 
 
@@ -14,9 +14,8 @@
   {{ form.csrf_token }}
   <p>
     {{ form.username.label }}
-    {{ form.username(size=20) }}
   </p>
-
+  {{ form.username(size=20) }}
 
 
 
@@ -49,9 +48,8 @@
 
   <p>
     {{ form.password.label }}
-    {{ form.password() }}
   </p>
-
+  {{ form.password(size=20) }}
 
 
 
