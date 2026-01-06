@@ -6,7 +6,7 @@ import requests
 import json
 from datetime import datetime
 from urllib.request import urlopen
-from flask import jsonify, render_template
+from flask import jsonify, render_template, redirect, url_for
 from app import app
 from app.forms import forms
 
@@ -14,6 +14,15 @@ from app.forms import forms
 
 def hw01_localweather():
     return app.send_static_file('hw01_localweather.html')
+
+def read_file(filename, mode="rt"):
+    with open(filename, mode, encoding='utf-8') as fin:
+        return fin.read()
+
+
+def write_file(filename, contents, mode="wt"):
+    with open(filename, mode, encoding="utf-8") as fout:
+        fout.write(contents)
 
 @app.route("/api/weather")
 def api_weather():
@@ -78,7 +87,7 @@ def hw03_prcp():
     
     for i in range(len(dayInMonth)):
         prcpTuple.append((dayInMonthShort[i], prcpOnly[i]))
-        
+
     return render_template('lab03/hw03_prcp.html', data=prcpDATA, days=dayInMonthShort, tup=prcpTuple)
 
 @app.route('/hw06/register', methods=('GET', 'POST'))
@@ -99,5 +108,5 @@ def hw06_register():
 @app.route('/hw06/users', methods=('GET', 'POST'))
 def hw06_users():
     raw_json = read_file('data/users.json')
-    userList = json.loads(raw_json)
-    return render_template('lab06/hw06_users.html', userList=userList)
+    usersList = json.loads(raw_json)
+    return render_template('lab06/hw06_users.html', usersList=usersList)
