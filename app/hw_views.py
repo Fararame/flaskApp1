@@ -8,6 +8,7 @@ from datetime import datetime
 from urllib.request import urlopen
 from flask import jsonify, render_template
 from app import app
+from app.forms import forms
 
 @app.route('/weather')
 
@@ -82,4 +83,21 @@ def hw03_prcp():
 
 @app.route('/hw06/register', methods=('GET', 'POST'))
 def hw06_register():
-    return render_template('lab06/hw06_register.html')
+    form = forms.RegistrationForm()
+    if form.validate_on_submit():
+        raw_json = read_file('data/users.json')
+        users = json.loads(raw_json)
+        users.append({'username': form.username.data,
+                      'email': form.email.data,
+                      'password': form.password.data,
+                      })
+        write_file('data/users.json',
+                   json.dumps(users, indent=4))
+        return redirect(url_for('hw06_users'))
+    return render_template('lab06/hw06_register.html', form=form)
+
+@app.route('/hw06/users', methods=('GET', 'POST'))
+def hw06_users():
+    raw_json = read_file('data/users.json')
+    userList = json.loads(raw_json)
+    return render_template('lab06/hw06_users.html', userList=userList)

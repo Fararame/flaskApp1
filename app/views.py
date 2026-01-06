@@ -100,17 +100,8 @@ def lab06_index():
         return redirect(url_for('lab06_courses'))
     return render_template('lab06/index.html', form=form)
 
-@app.route('/hw06/register', methods=('GET', 'POST'))
-def hw06_register():
-    form = forms.RegistrationForm()
-    if form.validate_on_submit():
-        raw_json = read_file('data/users.json')
-        users = json.loads(raw_json)
-        users.append({'username': form.username.data,
-                      'email': form.email.data,
-                      'password': form.password.data,
-                      })
-        write_file('data/users.json',
-                   json.dumps(users, indent=4))
-        return redirect(url_for('hw06_users'))
-    return render_template('lab06/hw06_register.html', form=form)
+@app.route('/lab06/courses/')
+def lab06_courses():
+    raw_json = read_file('data/course_list.json')
+    course_list = json.loads(raw_json)
+    return render_template('lab06/courses.html', course_list=course_list)

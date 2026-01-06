@@ -1,0 +1,11 @@
+{% comment %} Maythanan (670510722) {% endcomment %}
+{% extends 'lab06/base.html' %}
+{% block content %}
+    <h1>{% block title %} Users List {% endblock %}</h1>
+    <hr>
+    {% for user in userList %}
+        <h2> {{ user['username'] }} </h2>
+        <h3> {{ user['email'] }} </h3>
+        <hr>
+    {% endfor %}
+{% endblock %}
