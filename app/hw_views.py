@@ -105,6 +105,11 @@ def hw06_register():
         return redirect(url_for('hw06_users'))
     return render_template('lab06/hw06_register.html', form=form)
 
+@app.route('/hw04')
+def hw04_rwd():
+        return app.send_static_file('hw04_rwd.html')
+    
+
 @app.route('/hw06/users', methods=('GET', 'POST'))
 def hw06_users():
     raw_json = read_file('data/users.json')

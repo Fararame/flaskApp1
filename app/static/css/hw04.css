@@ -1,0 +1,35 @@
+.icon-good {
+    background-image: url('../ico/good.png');
+    background-size: contain; 
+    background-repeat: no-repeat;
+    background-position: center center;
+    display: inline-block; 
+    width: 90%; 
+    height: 0; 
+    padding-bottom: 60%; /* Maintains aspect ratio */
+    margin: auto; 
+ }
+ 
+ .card {
+     display: inline-block;
+     height: 150px;
+     margin: 1rem;
+     position: relative;
+     width: 200px;
+     font-size: 10px;
+ }
+ 
+ .border {
+    font-size: 12px;
+    border-bottom: 5px;
+    background-color: #FAF7F7;
+ }
+ 
+ .good-background  {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-color: #00e400;
+    height: 100px;
+ }
+
