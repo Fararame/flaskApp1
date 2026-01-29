@@ -13,6 +13,7 @@ app.jinja_options.update({
 app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = \
     'a48ee502057f1ad0e821803427f8972437e953b157c1e62b'
+app.config['JSON_AS_ASCII'] = False
 
 @app.before_request
 def remove_trailing_slash():

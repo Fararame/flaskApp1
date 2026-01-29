@@ -1,0 +1,29 @@
+[
+    {
+        "firstname": "สมชาย",
+        "lastname": "ทรงแบด",
+        "phone": "081 123 4567",
+        "postcode": "50270",
+        "subdist": "บ้านทับ",
+        "district": "แม่แจ่ม",
+        "province": "เชียงใหม่"
+    },
+    {
+        "firstname": "Maythanan",
+        "lastname": "Ladee",
+        "phone": "0971989198",
+        "postcode": "50130",
+        "subdist": "ต้นเปา",
+        "district": "สันกำแพง",
+        "province": "เชียงใหม่"
+    },
+    {
+        "firstname": "เก่งกาจ",
+        "lastname": "วนรัตน์",
+        "phone": "0998995999",
+        "postcode": "50130",
+        "subdist": "ต้นเปา",
+        "district": "สันกำแพง",
+        "province": "เชียงใหม่"
+    }
+]
