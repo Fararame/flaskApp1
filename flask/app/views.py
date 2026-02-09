@@ -30,3 +30,7 @@ def db_connection():
 @app.route('/lab04')
 def lab04_bootstrap():
     return app.send_static_file('lab04_bootstrap.html')
+
+@app.route('/crash')
+def crash():
+    return 1/0
