@@ -1,12 +1,15 @@
 # Maythanan Ladee (Frame)
 # 670510722
 # sec001
-
+import datetime
 import json
 from urllib.request import urlopen
 from urllib.parse import quote
 from flask import (jsonify, render_template, request)
-from app import app
+from app import app, db
+from app.models.anime import Anime
+from app import csrf
+from flask_wtf.csrf import CSRFProtect
 import os
 
 DEBUG = False
@@ -157,3 +160,45 @@ def read_file(filename, mode="rt"):
 def write_file(filename, contents, mode="wt"):
     with open(filename, mode, encoding="utf-8") as fout:
         fout.write(contents)
+@app.route('/anivault/api/rate', methods=['POST'])
+# @csrf.exempt
+def anivault_api_rate():
+   """
+   Updates the user rating for an anime.
+   """
+   # 1. Extract data
+   data = request.get_json()
+   # 2. Validate fields: Check [mal_id] and [rating] exist
+   for ani in data:
+       mal_id = data["mal_id"]
+       rating = data["my_rating"]
+
+       if mal_id is None or rating is None:
+        return jsonify({'success': False,
+                        'message': 'Missing mal_id or rating'}), 400
+        # 3. Find anime
+        anime = Anime.query.filter_by(mal_id=mal_id).first()
+
+        if not anime:
+            return jsonify({'success': False,
+                            'message': 'Anime not found'}), 404
+            
+        if anime is not None:
+            anime.my_rating = rating
+            db.session.commit()
+            return jsonify({'success': True, 'message': 'Rating updated!'}), 200
+        
+def anivault_api_delete():
+    data = request.get_json()
+    mal_id = data["mal_id"]
+       
+    if mal_id is None:
+         return jsonify({'success': False, 'message': 'Missing mal_id'}), 400
+       
+    if (anime := Anime.query.filter_by(mal_id=mal_id).first()) is None:
+        return jsonify({'success': False, 'message': 'Anime not found'}), 404
+       
+    if anime is not None:
+        anime.deleted_at = datetime.utcnow()
+        db.session.commit()
+        return jsonify({'success': True, 'message': 'Anime removed from collection'}), 200

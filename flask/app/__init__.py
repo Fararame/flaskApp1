@@ -17,7 +17,7 @@ app.jinja_options.update({
 
 app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = \
-    'e90ee8710c5d7d5150b9361b44d778597ba82046c68b6b9b'
+    'a48ee502057f1ad0e821803427f8972437e953b157c1e62b'
 app.config['JSON_AS_ASCII'] = False
 
 
