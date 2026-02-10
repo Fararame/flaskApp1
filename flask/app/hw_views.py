@@ -1,6 +1,6 @@
-# first_name last_name (nickname)
-# student_id
-# sec00x
+# Maythanan Ladee (Frame)
+# 670510722
+# sec001
 
 import json
 from urllib.request import urlopen
@@ -14,7 +14,7 @@ DEBUG = False
 @app.route('/anivault')
 def anivault_mylist():
     return render_template('anivault/index.html', active_tab='search')
-    
+
 
 @app.route('/anivault/fetch')
 def anivault_fetch():
