@@ -2,11 +2,12 @@ import os
 from flask import Flask, request, redirect
 from werkzeug.debug import DebuggedApplication
 from flask_sqlalchemy import SQLAlchemy
+from flask_wtf.csrf import CSRFProtect
 
 
 app = Flask(__name__, static_folder='static')
 app.url_map.strict_slashes = False
-
+csrf = CSRFProtect(app)
 
 app.jinja_options = app.jinja_options.copy()
 app.jinja_options.update({
