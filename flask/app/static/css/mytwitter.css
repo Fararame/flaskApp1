@@ -2,6 +2,7 @@ body {
     background-color: #e7ecf0;
 }
 
+
 nav {
     background-color: #ffffff;
     border-bottom: 1px solid #adb1b4;
@@ -33,6 +34,12 @@ img.tw-user-medium {
 .content-box {
     background-color: #ffffff;
     margin-bottom: 10px;
+}
+
+.new-tweet-row {
+    background-color: #eaf5fe;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 .tweet {

@@ -1,0 +1,43 @@
+name: "flask-app1"
+services:
+  flask:
+    image: ${REGISTRY_IP}:${REGISTRY_PORT}/flask-app1-flask:latest
+    ports:
+      - "56733:8000"
+    volumes:
+      - ./flask:/flask_app
+    env_file:
+      - .env.dev
+    depends_on:
+      - db
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+  db:
+    image: ${REGISTRY_IP}:${REGISTRY_PORT}/postgres:13-alpine
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env.dev
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+volumes:
+  postgres_data:

@@ -1,0 +1,300 @@
+{% extends 'anivault/base.html' %}
+
+{% block title %}AniVault - Fetch{% endblock %}
+
+{% block content %}
+<section class="card-panel w-full">
+    <div class="p-6">
+        <form id="fetch-form" class="form-container">
+            <div class="flex-1">
+                <label class="form-label">Anime
+                    Name</label>
+                <div class="relative">
+                    <span class="material-symbols-outlined input-icon">search</span>
+                    <input id="anime-name" name="name" class="form-input" placeholder="e.g. Hunter x Hunter..."
+                        type="text" required />
+                </div>
+            </div>
+            <div class="w-48">
+                <label class="form-label">Released Since Year</label>
+                <div class="relative">
+                    <span class="material-symbols-outlined input-icon text-lg">calendar_today</span>
+                    <input id="release-since-year" name="year" class="form-input" placeholder="YYYY" type="number"
+                        required />
+                </div>
+            </div>
+            <button id="fetch-btn" class="btn-primary" type="submit">
+                <span class="material-symbols-outlined text-lg">filter_alt</span>
+                <span>Search Database</span>
+            </button>
+        </form>
+    </div>
+</section>
+
+<section id="results-section" class="card-panel flex-1 flex flex-col hidden">
+    <div class="results-header">
+        <div class="flex items-center gap-3">
+            <h2 class="font-bold text-slate-800 text-lg">Search Results</h2>
+            <span id="result-index" class="status-badge">Loading results...</span>
+        </div>
+        <div class="flex items-center gap-2">
+            <button id="prev-btn" class="btn-icon">
+                <span class="material-symbols-outlined">chevron_left</span>
+            </button>
+            <button id="next-btn" class="btn-icon">
+                <span class="material-symbols-outlined">chevron_right</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="results-content">
+        <div class="detail-card">
+            <!-- Cover Image -->
+            <div class="w-full md:w-64 shrink-0">
+                <div class="cover-image-container">
+                    <img id="res-cover" src="" alt="Anime Cover" class="w-full h-full object-cover">
+                </div>
+            </div>
+
+            <!-- Details -->
+            <div class="flex-1 space-y-6">
+                <div>
+                    <h3 id="res-title" class="text-3xl font-black text-slate-900 leading-tight mb-2">Search an anime to
+                        see details</h3>
+                    <div id="res-genres" class="flex flex-wrap gap-2">
+                        <!-- Genres will be populated here -->
+                    </div>
+                </div>
+
+                <div class="details-grid">
+                    <div>
+                        <span class="block detail-label">Release Year</span>
+                        <span id="res-year" class="text-xl font-bold text-slate-700">----</span>
+                    </div>
+                    <div>
+                        <span class="block detail-label">Episodes</span>
+                        <span id="res-ep" class="text-xl font-bold text-slate-700">--</span>
+                    </div>
+                    <div>
+                        <span class="block detail-label">Rating</span>
+                        <div class="flex items-center gap-1.5">
+                            <span
+                                class="material-symbols-outlined text-amber-500 text-xl font-variation-fill">star</span>
+                            <span id="res-rating" class="text-xl font-black text-slate-700">0.0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <span class="block detail-label">Synopsis</span>
+                    <p id="res-synopsis" class="synopsis-text">
+                        Empty state synopsis...
+                    </p>
+                </div>
+
+                <div class="pt-4 mt-auto">
+                    <button id="add-this-btn" class="btn-large-action">
+                        <span class="material-symbols-outlined">add_circle</span>
+                        <span>Add To My Collection</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div id="initial-state" class="card-panel flex-1 flex flex-col items-center justify-center p-20 text-center">
+    <div class="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mb-6">
+        <span class="material-symbols-outlined text-5xl text-slate-300">search_check</span>
+    </div>
+    <h2 class="text-2xl font-bold text-slate-800 mb-2">Ready to expand your collection?</h2>
+    <p class="text-slate-500 max-w-sm">Enter an anime title above to fetch details from the Jikan API and add new
+        favorites to your vault.</p>
+</div>
+
+<script>
+    // Global variables to store our current search state
+    let currentResults = [];
+    let currentIndex = 0;
+
+    /**
+     * Task 1: Fetch data from our Jikan API Proxy
+     */
+    async function searchJikan(event) {
+        if (event) event.preventDefault();
+
+        // Get values from input fields using FormData
+        const formData = new FormData(event.target);
+        const name = formData.get('name');
+        const year = formData.get('year');
+
+        // UI elements
+        const initialState = document.querySelector('#initial-state');
+        const resultsSection = document.querySelector('#results-section');
+        const fetchBtn = document.querySelector('#fetch-btn');
+
+        // Show loading state
+        fetchBtn.disabled = true;
+        fetchBtn.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">sync</span><span>Searching...</span>';
+
+        try {
+            // Task 2: Perform the fetch call
+            const url = `/anivault/api/jikan?name=${encodeURIComponent(name)}&year=${year}`;
+            const response = await fetch(url);
+
+            if (!response.ok) {
+                throw new Error('API request failed');
+            }
+
+            // Task 3: Parse JSON and update state
+            currentResults = await response.json();
+            currentIndex = 0;
+
+            if (currentResults.length > 0) {
+                // Hide initial state, show results
+                initialState.classList.add('hidden');
+                resultsSection.classList.remove('hidden');
+                updateDisplay();
+            } else {
+                alert('No results found. Try a different title!');
+                initialState.classList.remove('hidden');
+                resultsSection.classList.add('hidden');
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
+            alert('Could not search Jikan API. It might be down or busy.');
+        } finally {
+            // Restore button state
+            fetchBtn.disabled = false;
+            fetchBtn.innerHTML = '<span class="material-symbols-outlined text-lg">filter_alt</span><span>Fetch From Jikan API</span>';
+        }
+    }
+
+    /**
+     * Task 4: Update the DOM with our data
+     */
+    function updateDisplay() {
+        if (currentResults.length === 0) return;
+
+        const anime = currentResults[currentIndex];
+
+        // Populate the "UI Form" with anime data
+        document.querySelector('#res-cover').src = anime.image_url;
+        // Prefer English title, fallback to original title
+        document.querySelector('#res-title').textContent = anime.title_english || anime.title;
+        document.querySelector('#res-year').textContent = anime.year || 'N/A';
+        document.querySelector('#res-ep').textContent = anime.episodes || '?';
+        document.querySelector('#res-rating').textContent = anime.score || '0.0';
+        document.querySelector('#res-synopsis').textContent = anime.synopsis || 'No synopsis available.';
+
+        // Update Genres (loop similar to Lab 03 Jinja loops but in JS)
+        const genresContainer = document.querySelector('#res-genres');
+        genresContainer.innerHTML = '';
+        if (anime.genres) {
+            anime.genres.forEach(genre => {
+                const span = document.createElement('span');
+                span.className = 'genre-tag';
+                span.textContent = genre;
+                genresContainer.appendChild(span);
+            });
+        }
+
+        // Update Navigation Stats
+        document.querySelector('#result-index').textContent = `Result ${currentIndex + 1} of ${currentResults.length}`;
+        document.querySelector('#prev-btn').disabled = (currentIndex === 0);
+        document.querySelector('#next-btn').disabled = (currentIndex === currentResults.length - 1);
+
+        // Reset the Add button appearance
+        const addBtn = document.querySelector('#add-this-btn');
+        addBtn.disabled = false;
+        addBtn.classList.remove('success');
+        addBtn.innerHTML = '<span class="material-symbols-outlined">add_circle</span><span>Add To My Collection</span>';
+    }
+
+    /**
+     * Task 5: Post data to our local Add API
+     * 
+     * The function receives 'formData' (URLSearchParams) as an argument.
+     * It should send a POST request to '/anivault/api/add' with the data.
+     */
+    async function addToVault(formData) {
+        // 1. Select the add button to manage its state
+        const addBtn = document.querySelector('#add-this-btn');
+
+        // 2. Show loading state: Disable button and show spinner
+        addBtn.disabled = true;
+        addBtn.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">sync</span><span>Adding...</span>';
+
+        try {
+            // 3. Define the API endpoint URL
+            const url = '/anivault/api/add';
+
+            // 4. Send POST request using fetch()
+            //    - Method: POST
+            //    - Headers: Content-Type must be 'application/x-www-form-urlencoded'
+            //    - Body: Convert formData to string using new URLSearchParams(formData).toString()
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams(formData).toString()
+            });
+
+            // 5. Parse the JSON response
+            const result = await response.json();
+
+            // 6. Handle the result
+            if (result.success) {
+                // Success: Update UI to green 'success' state
+                addBtn.classList.add('success');
+                addBtn.innerHTML = '<span class="material-symbols-outlined">check_circle</span><span>Added to Vault</span>';
+            } else {
+                // Failure: Alert message and reset button
+                alert(result.message);
+                addBtn.disabled = false;
+                addBtn.innerHTML = '<span class="material-symbols-outlined">add_circle</span><span>Add To My Collection</span>';
+            }
+        } catch (error) {
+            // 7. Handle Network Errors
+            console.error('Error adding anime:', error);
+            alert('Could not save to your vault.');
+            addBtn.disabled = false;
+        }
+    }
+
+    // Set up Event Listeners
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelector('#fetch-form').addEventListener('submit', searchJikan);
+
+        document.querySelector('#prev-btn').addEventListener('click', function () {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateDisplay();
+            }
+        });
+
+        document.querySelector('#next-btn').addEventListener('click', function () {
+            if (currentIndex < currentResults.length - 1) {
+                currentIndex++;
+                updateDisplay();
+            }
+        });
+
+        document.querySelector('#add-this-btn').addEventListener('click', function () {
+            // currentResults is the global array of anime data fetched from API
+            // currentIndex checks which one is currently on screen
+            const anime = currentResults[currentIndex];
+
+            // Prepare Form Data
+            // We convert the 'anime' object into URLSearchParams to mimic a HTML form submission
+            const formData = new URLSearchParams();
+            for (const key in anime) {
+                formData.append(key, anime[key]);
+            }
+
+            addToVault(formData);
+        });
+    });
+</script>
+{% endblock %}

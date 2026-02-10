@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>{% block title %}AniVault{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link href="{{ url_for('static', filename='css/anivault.css') }}" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#6366f1",
+                        "background-light": "#fdfdfd",
+                    },
+                    fontFamily: {
+                        sans: ["Inter", "sans-serif"],
+                    },
+                },
+            },
+        };
+    </script>
+    <style type="text/tailwindcss">
+        @layer base {
+            .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        }
+    </style>
+    <!-- Grid.js CSS -->
+    <link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
+    {% block extra_style %}{% endblock %}
+</head>
+
+<body class="flex flex-col min-h-screen">
+    <header class="bg-white border-b border-slate-200">
+        <div class="max-w-[1920px] mx-auto px-12 flex items-center h-[72px]">
+            <div class="flex items-center gap-12 h-full">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 bg-primary rounded-lg flex items-center justify-center shadow-sm">
+                        <span class="material-symbols-outlined text-white text-xl filled-icon">movie_filter</span>
+                    </div>
+                    <span class="text-xl font-bold tracking-tight text-slate-800">AniVault</span>
+                </div>
+                <nav class="flex h-full gap-10">
+                    <a class="{% if active_tab == 'search' %}relative inline-flex items-center h-full text-sm font-bold text-primary transition-colors{% else %}inline-flex items-center h-full text-sm font-bold text-slate-400 hover:text-primary transition-colors{% endif %}"
+                        href="{{ url_for('anivault_mylist') }}">
+                        My List
+                        {% if active_tab == 'search' %}
+                        <div class="absolute bottom-0 left-0 w-full h-[3px] bg-primary rounded-t-full"></div>
+                        {% endif %}
+                    </a>
+                    <a class="{% if active_tab == 'fetch' %}relative inline-flex items-center h-full text-sm font-bold text-primary transition-colors{% else %}inline-flex items-center h-full text-sm font-bold text-slate-400 hover:text-primary transition-colors{% endif %}"
+                        href="{{ url_for('anivault_fetch') }}">
+                        Fetch
+                        {% if active_tab == 'fetch' %}
+                        <div class="absolute bottom-0 left-0 w-full h-[3px] bg-primary rounded-t-full"></div>
+                        {% endif %}
+                    </a>
+                </nav>
+            </div>
+            <div class="ml-auto flex items-center gap-4">
+                <div class="text-right">
+                    <p class="text-xs font-bold text-slate-700">Student Account</p>
+                    <p class="text-[10px] text-slate-400 uppercase tracking-wider">Exam Period Active</p>
+                </div>
+                <div
+                    class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 border border-slate-200">
+                    <span class="material-symbols-outlined text-xl">person</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 w-full max-w-[1920px] mx-auto px-12 py-8 space-y-6">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Grid.js JavaScript -->
+    <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+
+</html>

@@ -17,7 +17,7 @@ app.jinja_options.update({
 
 app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = \
-    'a48ee502057f1ad0e821803427f8972437e953b157c1e62b'
+    'e90ee8710c5d7d5150b9361b44d778597ba82046c68b6b9b'
 app.config['JSON_AS_ASCII'] = False
 
 
@@ -26,7 +26,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 if app.debug:
     app.wsgi_app = DebuggedApplication(app.wsgi_app, evalex=True)
-
+    
 # Creating an SQLAlchemy instance
 db = SQLAlchemy(app)
 
@@ -39,3 +39,4 @@ def remove_trailing_slash():
 
 
 from app import views  # noqa
+from app import hw_views  # noqa

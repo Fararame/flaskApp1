@@ -1,0 +1,110 @@
+[
+    {
+        "mal_id": 20,
+        "title_english": "Naruto",
+        "image_url": "https://cdn.myanimelist.net/images/anime/1141/142503.jpg",
+        "year": 2002,
+        "episodes": 220,
+        "synopsis": "Naruto Uzumaki story",
+        "score": 8.02,
+        "genres": [
+            "Action",
+            "Adventure",
+            "Fantasy"
+        ],
+        "my_rating": 0,
+        "deleted_at": null
+    },
+    {
+        "mal_id": 269,
+        "title_english": "Bleach",
+        "image_url": "https://cdn.myanimelist.net/images/anime/3/40451.jpg",
+        "year": 2004,
+        "episodes": 366,
+        "synopsis": "Ichigo Kurosaki is a human with the ability to see ghosts. His life changes when he meets Rukia Kuchiki, a Soul Reaper who transfers her powers to him during a desperate battle against a Hollow.",
+        "score": 7.98,
+        "genres": [
+            "Action",
+            "Adventure",
+            "Fantasy"
+        ],
+        "my_rating": 0,
+        "deleted_at": null
+    },
+    {
+        "mal_id": 20507,
+        "title_english": "Noragami",
+        "image_url": "https://cdn.myanimelist.net/images/anime/1886/128266.jpg",
+        "year": 2014,
+        "episodes": 12,
+        "synopsis": "In times of need, if you look in the right place, you just may see a strange telephone number scrawled in red. If you call this number, you will hear a young man introduce himself as the Yato God. Yato is a minor deity and a self-proclaimed \"Delivery God,\" who dreams of having millions of worshippers.",
+        "score": 7.94,
+        "genres": [
+            "Action",
+            "Supernatural"
+        ],
+        "my_rating": 1,
+        "deleted_at": null
+    },
+    {
+        "mal_id": 50265,
+        "title_english": "Spy x Family",
+        "image_url": "https://cdn.myanimelist.net/images/anime/1441/122795.jpg",
+        "year": 2022,
+        "episodes": 12,
+        "synopsis": "Corrupt politicians, frenzied nationalists, and other warmongering forces constantly jeopardize the thin veneer of peace between neighboring countries Ostania and Westalis. In spite of their plots, renowned spy and master of disguise \"Twilight\" fulfills dangerous missions.",
+        "score": 8.43,
+        "genres": [
+            "Action",
+            "Comedy",
+            "Award Winning"
+        ],
+        "my_rating": 0,
+        "deleted_at": null
+    },
+    {
+        "mal_id": 50381,
+        "title_english": "Bleach: Thousand-Year Blood War",
+        "image_url": "https://cdn.myanimelist.net/images/anime/1908/135431.jpg",
+        "year": 2022,
+        "episodes": 13,
+        "synopsis": "The final arc of Bleach. The Soul Society is attacked by the Wandenreich, an army of Quincies who were thought to have been wiped out long ago. Ichigo and his friends must stop the destruction of the balance between worlds.",
+        "score": 8.98,
+        "genres": [
+            "Action",
+            "Adventure",
+            "Fantasy"
+        ],
+        "my_rating": 0,
+        "deleted_at": null
+    },
+    {
+        "mal_id": 52991,
+        "title_english": "Frieren: Beyond Journey's End",
+        "image_url": "https://cdn.myanimelist.net/images/anime/1015/138006.jpg",
+        "year": 2023,
+        "episodes": 28,
+        "synopsis": "The adventure is over but life goes on for an elf mage beginning to learn what living is all about. Many years after the hero party's victory, Frieren visits her former comrades as they age and pass away, leading her to reflect on her own long life.",
+        "score": 9.29,
+        "genres": [
+            "Adventure",
+            "Drama",
+            "Fantasy"
+        ],
+        "my_rating": 0,
+        "deleted_at": null
+    },
+    {
+        "episodes": 12,
+        "genres": [
+            "Slice of Life",
+            "Supernatural"
+        ],
+        "image_url": "https://cdn.myanimelist.net/images/anime/1270/145168.jpg",
+        "mal_id": 55823,
+        "score": 8.57,
+        "synopsis": "As a young child, Takashi Natsume believed his ability to see youkai to be nothing but a curse. Now a high school student, Natsume has managed to heal from his old wounds and form unbreakable bonds with humans and youkai alike. Natsume's newfound friendships\u2014including the one with his spirit bodyguard Madara, nicknamed \"Nyanko-sensei\"\u2014are often interlaced with his duty to return the names of the spirits written inside the Book of Friends, his late grandmother Reiko's keepsake. While more remarkable youkai reach out to him, Natsume discovers that he still has much to learn about the world that surrounds him.\n\n[Written by MAL Rewrite]",
+        "title_english": "Natsume's Book of Friends Season 7",
+        "year": 2024
+    }
+]

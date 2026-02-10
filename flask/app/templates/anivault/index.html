@@ -1,0 +1,360 @@
+<!-- FULL VERSION -->
+{% extends 'anivault/base.html' %}
+
+{% block title %}AniVault - My List{% endblock %}
+
+
+
+{% block content %}
+<!-- Collection Header with Search -->
+<div
+    class="bg-white rounded-xl py-6 px-8 shadow-sm border-none flex flex-col md:flex-row md:items-center justify-between gap-6">
+    <div class="flex items-center gap-3">
+        <h1 class="text-xl font-bold text-slate-800">My Anime Collection</h1>
+        <span class="material-symbols-outlined text-primary text-xl">collections_bookmark</span>
+    </div>
+    <div class="relative w-full md:max-w-md">
+        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+            <span class="material-symbols-outlined text-slate-400 text-xl">search</span>
+        </div>
+        <input id="anime-search"
+            class="block w-full pl-11 pr-4 py-2.5 bg-slate-50 border-none text-sm text-slate-900 rounded-xl focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all placeholder:text-slate-400"
+            placeholder="Search collection..." type="text" />
+    </div>
+</div>
+
+<section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col mb-8">
+    <div id="anime-grid"></div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const grid = new gridjs.Grid({
+            columns: [
+                {
+                    id: 'cover',
+                    name: 'Cover',
+                    width: '140px',
+                    sort: false,
+                    formatter: (_, row) => {
+                        const imageUrl = row.cells[8].data;
+                        const title = row.cells[1].data || row.cells[9].data;
+                        return gridjs.html(`
+                        <div class="anime-cover-cell">
+                            <img src="${imageUrl}" alt="${title}" />
+                        </div>
+                    `);
+                    }
+                },
+                {
+                    id: 'title',
+                    name: 'Title',
+                    width: '18%',
+                    formatter: (cell, row) => {
+                        const title = cell || row.cells[9].data;
+                        const genres = row.cells[10].data || [];
+                        const genreBadges = Array.isArray(genres)
+                            ? genres.map(g => `<span class="genre-badge">${g}</span>`).join('')
+                            : '';
+                        return gridjs.html(`
+                        <div class="anime-title-cell">
+                            <span class="anime-title-text">${title}</span>
+                            ${genreBadges ? `<div class="anime-genres">${genreBadges}</div>` : ''}
+                        </div>
+                    `);
+                    }
+                },
+                {
+                    id: 'year',
+                    name: 'Year',
+                    width: '80px',
+                    attributes: (cell) => {
+                        return { style: 'text-align: center; padding: 1.5rem 0.5rem !important;' };
+                    },
+                    formatter: (cell) => gridjs.html(`<div class="anime-year-cell">${cell || 'N/A'}</div>`)
+                },
+                {
+                    id: 'episodes',
+                    name: 'Ep',
+                    width: '60px',
+                    attributes: (cell) => {
+                        return { style: 'text-align: center; padding: 1.5rem 0.5rem !important;' };
+                    },
+                    formatter: (cell) => gridjs.html(`<div class="anime-ep-cell">${cell || 'N/A'}</div>`)
+                },
+                {
+                    id: 'synopsis',
+                    name: 'Synopsis',
+                    sort: false,
+                    formatter: (cell) => gridjs.html(`<p class="anime-synopsis-cell">${cell || ''}</p>`)
+                },
+                {
+                    id: 'score',
+                    name: 'MAL Rating',
+                    width: '9%',
+                    attributes: (cell) => {
+                        return { style: 'text-align: center;' };
+                    },
+                    formatter: (cell) => {
+                        if (!cell) return '';
+                        return gridjs.html(`
+                        <div style="display: inline-flex;">
+                            <div class="rating-badge">
+                                <span class="material-symbols-outlined">star</span>
+                                <span class="rating-val">${cell}</span>
+                            </div>
+                        </div>
+                    `);
+                    }
+                },
+                // ----------------------------------------------------------------------
+                // MY RATING COLUMN (Thumbs Up/Down)
+                // Displays thumb buttons for rating. Uses data-action="like"/"dislike"
+                // and data-id to identify which anime to rate.
+                // The event handler for these buttons is in the click listener below.
+                // ----------------------------------------------------------------------
+                {
+                    id: 'my_rating',
+                    name: 'My Rating',
+                    width: '120px',
+                    formatter: (cell, row) => {
+                        const malId = row.cells[11].data;
+                        const rating = cell;
+
+                        const activeLikeClass = 'text-primary';
+                        const activeDislikeClass = 'text-primary';
+                        const inactiveClass = 'text-slate-300 hover:text-slate-400';
+
+                        const likeClass = rating === 1 ? activeLikeClass : inactiveClass;
+                        const dislikeClass = rating === -1 ? activeDislikeClass : inactiveClass;
+
+                        const likeIconClass = rating === 1 ? 'filled-icon' : '';
+                        const dislikeIconClass = rating === -1 ? 'filled-icon' : '';
+
+                        return gridjs.html(`
+                        <div class="my-rating-cell inline-flex items-center gap-3">
+                            <button class="thumb-up flex items-center justify-center ${likeClass} transition-all" data-action="like" data-id="${malId}">
+                                <span class="material-symbols-outlined text-[28px] ${likeIconClass}">thumb_up</span>
+                            </button>
+                            <button class="thumb-down flex items-center justify-center ${dislikeClass} transition-all" data-action="dislike" data-id="${malId}">
+                                <span class="material-symbols-outlined text-[28px] ${dislikeIconClass}">thumb_down</span>
+                            </button>
+                        </div>
+                    `);
+                    }
+                },
+                // ----------------------------------------------------------------------
+                // ----------------------------------------------------------------------
+                // ACTIONS COLUMN (Delete Button)
+                // Displays a delete button. Uses data-action="delete" and data-id
+                // to identify which anime to delete.
+                // The event handler for this button is in the click listener below.
+                // ----------------------------------------------------------------------
+                {
+                    id: 'actions',
+                    name: 'Actions',
+                    width: '6%',
+                    sort: false,
+                    formatter: (_, row) => {
+                        const malId = row.cells[11].data;
+                        return gridjs.html(`
+                        <div class="action-cell">
+                            <button data-action="delete" data-id="${malId}">
+                                <span class="material-symbols-outlined">delete</span>
+                            </button>
+                        </div>
+                    `);
+                    }
+                },
+                // ----------------------------------------------------------------------
+                // Hidden columns for data access
+                { id: 'image_url', name: 'image_url', hidden: true },
+                { id: 'title_raw', name: 'title_raw', hidden: true },
+                { id: 'genres', name: 'genres', hidden: true },
+                { id: 'mal_id', name: 'mal_id', hidden: true }
+            ],
+            server: {
+                url: '/anivault/api/list',
+                then: data => data.map(anime => [
+                    null, // cover placeholder
+                    anime.title_english || anime.title,
+                    anime.year,
+                    anime.episodes,
+                    anime.synopsis,
+                    anime.score,
+                    anime.my_rating || 0, // my_rating
+                    null, // actions placeholder
+                    anime.image_url,
+                    anime.title,
+                    anime.genres,
+                    anime.mal_id
+                ])
+            },
+            pagination: {
+                limit: 5,
+                summary: true
+            },
+            sort: true,
+            search: {
+                enabled: true,
+                placeholder: 'Search collection...'
+            },
+            language: {
+                pagination: {
+                    previous: '‹',
+                    next: '›',
+                    showing: 'Showing',
+                    of: 'of',
+                    to: '-',
+                    results: 'entries'
+                }
+            }
+        });
+
+        grid.render(document.querySelector('#anime-grid'));
+
+        // ======================================================================
+        // THUMBS UP/DOWN & DELETE EVENT HANDLERS
+        // This section handles click events for rating and delete buttons.
+        // ======================================================================
+        document.querySelector('#anime-grid').addEventListener('click', (e) => {
+            const button = e.target.closest('button');
+            if (!button) return;
+
+            const action = button.dataset.action;
+            const id = button.dataset.id;
+
+            // Helper function for API calls (used by both rating and delete)
+            const apiCall = async (url, method, body) => {
+                try {
+                    const response = await fetch(url, {
+                        method: method,
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(body)
+                    });
+                    return await response.json();
+                } catch (error) {
+                    console.error('API Error:', error);
+                    return null;
+                }
+            };
+
+            // ----------------------------------------------------------------------
+            // THUMBS UP/DOWN RATING HANDLER
+            // Handles like/dislike button clicks with optimistic UI updates.
+            // The UI changes immediately, then the API call persists the rating.
+            // ----------------------------------------------------------------------
+            if (action === 'like' || action === 'dislike') {
+                const isLike = action === 'like';
+                const likeBtn = button.parentElement.querySelector('.thumb-up');
+                const dislikeBtn = button.parentElement.querySelector('.thumb-down');
+
+                const likeIcon = likeBtn.querySelector('.material-symbols-outlined');
+                const dislikeIcon = dislikeBtn.querySelector('.material-symbols-outlined');
+
+                const activeLikeClass = 'text-primary';
+                const inactiveClass = 'text-slate-300';
+                const activeDislikeClass = 'text-primary';
+
+                // Determine new rating: clicking active button toggles off (0)
+                let newRating = 0;
+                const isCurrentActive = button.classList.contains('text-primary');
+
+                if (isCurrentActive) {
+                    newRating = 0;
+                } else {
+                    newRating = isLike ? 1 : -1;
+                }
+
+                // Optimistic UI update - reset both buttons first, then set active one
+                likeBtn.className = `thumb-up flex items-center justify-center ${inactiveClass} hover:text-slate-400 transition-all`;
+                likeIcon.classList.remove('filled-icon');
+
+                dislikeBtn.className = `thumb-down flex items-center justify-center ${inactiveClass} hover:text-slate-400 transition-all`;
+                dislikeIcon.classList.remove('filled-icon');
+
+                if (newRating === 1) {
+                    likeBtn.className = `thumb-up flex items-center justify-center ${activeLikeClass} transition-all`;
+                    likeIcon.classList.add('filled-icon');
+                } else if (newRating === -1) {
+                    dislikeBtn.className = `thumb-down flex items-center justify-center ${activeDislikeClass} transition-all`;
+                    dislikeIcon.classList.add('filled-icon');
+                }
+
+                /*
+                 * API CALL: /anivault/api/rate
+                 * Method: POST
+                 * Request Body: { mal_id: <int>, rating: <int> }  // rating: 1 (like), -1 (dislike), 0 (none)
+                 * Expected Response: { success: true }
+                 * 
+                 * PATTERN: Optimistic UI Update
+                 * - The UI updates immediately when clicked (no waiting for server)
+                 * - The API call happens in the background to persist the change
+                 * - If the API fails, you may optionally revert the UI state
+                 * - No need to return entry data since UI already updated
+                 */
+                apiCall('/anivault/api/rate', 'POST', { mal_id: id, rating: newRating })
+                    .then(data => {
+                        if (data && !data.success) {
+                            console.error('Rating update failed:', data.message);
+                            // TODO: Revert UI state if needed
+                        }
+                    });
+                // ----------------------------------------------------------------------
+
+                // ----------------------------------------------------------------------
+                // DELETE BUTTON HANDLER
+                // Handles delete button clicks. After confirmation, calls the API
+                // to soft-delete the anime, then refreshes the grid.
+                // ----------------------------------------------------------------------
+            } else if (action === 'delete') {
+                if (confirm('Remove this anime from your collection?')) {
+                    /*
+                     * API CALL: /anivault/api/delete
+                     * Method: POST
+                     * Request Body: { mal_id: <int> }
+                     * Expected Response: { success: true }
+                     * 
+                     * PATTERN: Server Refresh
+                     * - This is a soft delete: set deleted_at to current timestamp
+                     * - After success, grid.forceRender() re-fetches data from /api/list
+                     * - The /api/list endpoint should filter out entries where deleted_at is not null
+                     * - No need to return table data from delete endpoint
+                     */
+                    apiCall('/anivault/api/delete', 'POST', { mal_id: id })
+                        .then(data => {
+                            if (data && data.success) {
+                                // Refresh grid to remove row (re-fetches from /api/list)
+                                grid.forceRender();
+                            } else {
+                                alert('Failed to delete anime.');
+                            }
+                        });
+                }
+            }
+            // ----------------------------------------------------------------------
+        });
+        // ======================================================================
+
+        // Custom search box functionality
+        const searchInput = document.querySelector('#anime-search');
+        let searchTimeout;
+
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                const searchTerm = e.target.value;
+                grid.updateConfig({
+                    search: {
+                        keyword: searchTerm
+                    }
+                }).forceRender();
+            }, 300);
+        });
+    });
+</script>
+{% endblock %}
