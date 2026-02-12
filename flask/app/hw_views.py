@@ -8,8 +8,6 @@ from urllib.parse import quote
 from flask import (jsonify, render_template, request)
 from app import app, db
 from app.models.anime import Anime
-from app import csrf
-from flask_wtf.csrf import CSRFProtect
 import os
 
 DEBUG = False

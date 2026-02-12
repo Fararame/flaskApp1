@@ -22,9 +22,13 @@
 
 <div id="add-edit" class="container" hidden="hidden"></div>
 <body>
-  <div id="header" class="container">
-    <h1>Phonebook</h1>
-  </div>
+ <div id="header" class="container">
+   <div class="box3">
+     <button id="logout" type="button">Logout</button>
+   </div>
+   <h1>{{ current_user.name }}'s Phonebook</h1>
+ </div>
+
   <div id="add-edit" class="container">
     <h2 id="add-edit-caption">Add/Edit a Contact:</h2>
     <form id="addPhoneNumberForm">
@@ -195,5 +199,9 @@
       clearForm();
       toggleView();
     });
-
-  </script>
+    
+    $("#logout").click(function () {
+     clearForm();
+     window.location.href = "lab11/logout";
+   });
+ </script>

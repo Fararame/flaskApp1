@@ -2,12 +2,12 @@ import os
 from flask import Flask, request, redirect
 from werkzeug.debug import DebuggedApplication
 from flask_sqlalchemy import SQLAlchemy
-from flask_wtf.csrf import CSRFProtect
+from flask_login import LoginManager
 
 
 app = Flask(__name__, static_folder='static')
 app.url_map.strict_slashes = False
-csrf = CSRFProtect(app)
+
 
 app.jinja_options = app.jinja_options.copy()
 app.jinja_options.update({
@@ -18,7 +18,7 @@ app.jinja_options.update({
 
 app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = \
-    'a48ee502057f1ad0e821803427f8972437e953b157c1e62b'
+    'a3f19c7b5e42d0aac8b7e4f19ad2c3357fe0b1c94d8a23f6'
 app.config['JSON_AS_ASCII'] = False
 
 
@@ -31,6 +31,9 @@ if app.debug:
 # Creating an SQLAlchemy instance
 db = SQLAlchemy(app)
 
+login_manager = LoginManager()
+login_manager.login_view = 'lab11_login'
+login_manager.init_app(app)
 
 @app.before_request
 def remove_trailing_slash():
@@ -39,5 +42,6 @@ def remove_trailing_slash():
         return redirect(request.path[:-1], code=301)
 
 
-from app import views  # noqa
+
 from app import hw_views  # noqa
+from app import views  # noqa
